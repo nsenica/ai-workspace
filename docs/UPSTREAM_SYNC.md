@@ -1,73 +1,76 @@
 # Public foundation and private downstream synchronization
 
-**Goal:** Share reusable operating guidance while keeping private project data and history private. Public upstream provides methods, templates and synthetic examples. Private downstream holds actual projects, handoffs, decisions and evidence.
+**Purpose:** Share generic AI Workspace improvements while keeping actual project context, decisions, conversations and evidence in a separate **private** downstream repository.
 
-This document describes a **proposed, manual, review-gated process**, not an automatically configured sync. Do **not** apply it to a production workspace without taking a backup and testing the exact tree first.
+There is no built-in synchronization. Every update is a deliberate, review-gated Git operation. Never configure automatic private-to-public publication.
 
-## Ownership boundary
+## Separate what each repository owns
 
-| Public foundation | Private workspace |
+| Public upstream | Private downstream |
 | --- | --- |
-| `README.md`, `AGENTS.md`, `STORAGE.md` | `WORKSPACE.md` and personal project index |
-| `templates/`, `docs/`, `examples/` | `projects/<slug>/` and project-specific guidance |
-| Generic improvements and synthetic tests | Real handoffs, artifacts, evidence and task references |
+| `README.md`, `AGENTS.md`, `STORAGE.md` | Project-specific rules and index (`WORKSPACE.md`) |
+| `templates/`, `docs/`, `examples/` | Actual `projects/<slug>/` handoffs, pending context and evidence |
+| Generic, synthetic and approved improvements | Real project history, access decisions and sensitive records |
 
-To reduce future conflicts, prefer adding private instructions in `WORKSPACE.md` or `projects/<slug>/`, rather than editing shared root files directly. Local rules can be stricter than general upstream guidance.
+Keep downstream customizations in project folders or `WORKSPACE.md` where possible to reduce conflicts with future upstream releases. Repository visibility and directory names alone do not enforce per-project permissions.
 
-## Two different flows
+## First: determine whether histories are related
 
-**Upstream → downstream:** Fetch the public remote into a **private local review branch**; inspect and merge accepted foundational updates. Verify they don't override stricter private rules.
+There are at least three legitimate ways to create a private workspace:
 
-**Downstream → upstream:** Manually distill a generic improvement. Apply it on a **fresh public-history branch** without copying private commits, blobs, branches or artifacts. Review the entire proposed public history before opening a PR.
+1. **Clone and push** the public repository to a private remote: Git ancestry is retained.
+2. **Use GitHub's template feature** to create a new private repository: it normally starts with an independent initial commit, even when the files match.
+3. **Adopt the foundation into an older private workspace:** histories may be unrelated.
 
-**Never automate private → public synchronization.**
+Never assume shared ancestry from identical file contents. Inspect the commits and use `git merge-base` when deciding on the integration strategy. A freshly republished public foundation can have different Git history from an older private workspace even when its files are identical.
 
-## First integration with an existing private repo
+## Public → private: controlled adoption
 
-The two repositories usually have **unrelated Git histories**. Ordinary merge fails without a one-time explicit unrelated-history merge, and duplicate root files require careful conflict resolution.
+1. Back up the downstream repository, confirm the private checkout is clean and check its remotes.
+2. From the private checkout, fetch the public upstream into a **private review branch**, never an automated merge to a production workspace.
+3. Compare root guidance and templates. Preserve local authority, reader access, agent scope, pending context and all real project files.
+4. If the repositories share ancestry, use an ordinary reviewed merge (or manually apply selected changes).
+5. If their histories are unrelated, either copy selected reviewed generic files **without importing public history**, or perform a one-time reviewed unrelated-history merge **into the private repository only**.
+6. Inspect the staged tree, resolve conflicts deliberately, run the relevant read-only continuation checks, then publish **only to the private remote** after approval.
 
-Before integrating:
-1. Wait until the eventual public repository's history is stable. **If the current development repo will be deleted/recreated at launch, defer the real upstream merge until after recreation.** Otherwise a second unrelated-history merge may be necessary.
-2. Take a verified private backup and confirm the checkout has no uncommitted or protected changes.
-3. In a **new private branch**, extract project-specific README/index content into a private `WORKSPACE.md` and project-local files. Preserve existing records and history.
-4. Inspect the public foundation's root files and select the intended shared versions without discarding private rules.
-5. Configure a dedicated public remote as **fetch-only** when practical. Check the active push destinations.
-
-A possible *manual review sequence*, run inside the existing private checkout:
+Example for an existing private checkout (review commands; they do not publish):
 
 ```sh
 git status --short
 git remote -v
-git switch -c chore/adopt-ai-workspace
-
-# After separately committing the private WORKSPACE.md migration:
+# Add the public upstream as a distinct remote only if not already configured:
 git remote add ai-workspace https://github.com/OWNER/ai-workspace.git
 git fetch ai-workspace main
 
-# One-time explicit integration of independent histories:
-git merge --allow-unrelated-histories --no-ff --no-commit ai-workspace/main
+git switch -c chore/review-ai-workspace-update
 
-# Expect add/add conflicts for README.md / AGENTS.md / STORAGE.md.
-# Resolve deliberately; do not blindly select one side.
-git status
-git diff --check
-# Inspect every staged file and any conflict markers before committing.
+git merge-base HEAD ai-workspace/main || echo 'Unrelated history: choose a deliberate integration method'
+
+git diff --stat HEAD ai-workspace/main  # Review the potentially large difference
 ```
 
-If the merge is unsafe, use `git merge --abort` before committing. After all conflicts are resolved, explicitly stage approved files, create a merge commit, and review the diff and resulting tree before pushing **only to the private remote**. Avoid running these commands against a live/dirty checkout without an operator-approved migration plan.
+For a **shared-ancestry** private branch, after reviewing the changes and with a safe clean checkout, a normal `git merge --no-ff --no-commit ai-workspace/main` can stage integration for inspection.
 
-After a completed one-time merge, both repositories share ancestry. Subsequent accepted upstream changes generally use an ordinary `git fetch ai-workspace` followed by `git merge --no-ff ai-workspace/main` **on a private review branch**, with regular conflict review.
+For an **unrelated-history** private branch, `git merge --allow-unrelated-histories --no-ff --no-commit ai-workspace/main` is an option only when expressly approved, with a verified backup and intentional conflict resolution. Existing root files may produce add/add conflicts. If uncertain, prefer copying only the reviewed generic changes. Use `git merge --abort` if the resulting merge is unsafe.
 
-## Do not mistake merged ancestry for publication safety
+**Never run the reverse operation:** merging the private downstream into public upstream would make private history reachable from public Git.
 
-An ordinary downstream merge preserves both histories in the **private** repository. It is suitable for adopting a public baseline privately.
+## Private → public: reauthor generic improvements
 
-It is **not suitable for contributing the downstream branch back to upstream**: that would risk publishing all reachable private history. Public contributions must start from clean upstream history.
+1. Describe the useful method or template improvement without copying real project context.
+2. Create a new branch from the **public** upstream, not from downstream history.
+3. Reimplement the generic change using synthetic examples and a privacy-safe author/committer identity.
+4. Review every staged file and every commit that will become public. A cherry-pick can preserve original author metadata, so do not treat cherry-picking private commits as safe by default.
+5. Open a focused public pull request for review.
 
-## Suggested adoption acceptance checks
+Do **not** push a private branch, merge private history upstream, upload private archives or enable an automated private-to-public sync.
 
-- Shared root guidance is readable and project-independent.
-- Actual project files and private workspace configuration are unchanged or deliberately migrated.
-- Agent access, task authority and operational permissions did not expand.
-- A new read-only agent can still identify the correct next gate for each sampled project.
-- Only the intended private Git remote received the integration commit.
+## Acceptance checks
+
+- The target private project index and handoffs remain intact.
+- No private content, logs, credentials or personal metadata enter public upstream.
+- New shared guidance is compatible with the private project's stricter scope rules.
+- A fresh read-only agent can identify the next safe gate for a sampled project.
+- The only repository receiving the downstream integration is the intended **private** remote.
+
+See [Security](SECURITY.md) and [Getting started](GETTING_STARTED.md).

@@ -1,41 +1,47 @@
-# Security, privacy, and trust boundaries
+# Security, privacy and trust boundaries
 
-AI Workspace is **documentation and Git storage, not a security sandbox or access-control system**. Neither a private GitHub repository nor a path convention grants per-project isolation to collaborators who already have full repository access.
+AI Workspace is documentation and Git storage, **not** a security sandbox, access-control system, secret vault or agent permission service. A private repository does not supply per-project isolation to everyone who has repository read access.
 
-## Before committing
+## Before committing or publishing
 
-- Inspect added content, diffs, filenames, logs, screenshots, archives, metadata and generated artifacts for credentials, tokens, private keys, personal details, confidential inputs and internal infrastructure.
-- Use a tested secret scanner where practical, but **manual review remains required**; scanners miss context and can produce false negatives.
-- Keep restricted raw artifacts in an approved access-controlled store, with a safe pointer and the limits of verification recorded here.
-- Redaction creates **new bytes**. A hash of the sanitized file is not the hash of the original. Do not casually store original unredacted hashes if they expose sensitive identifiers.
-- `.gitignore` only affects untracked paths; it is not a privacy boundary and cannot remove previously committed content.
+- Inspect added text, diffs, filenames, logs, screenshots, archives, metadata and generated outputs for credentials, private keys, personal information, private repository names, sensitive URLs and confidential inputs.
+- Use a tested secret scanner where practical, **plus manual review**. Both automated scans and human review have limits.
+- Keep restricted raw evidence in an approved access-controlled store; preserve only safe references, attribution and explicit verification limitations here.
+- Remember that `.gitignore` does not hide already-committed content, and deleting a file later does not remove it from Git history, clones or forks.
+
+## Git commit identity is publication metadata
+
+Git commits record author and committer names and email addresses, independently of what your GitHub profile currently displays. Changing GitHub's account email privacy settings does not rewrite older commits.
+
+Before publishing a new repository or a branch, inspect the intended reachable history, for example:
+
+```sh
+git log --all --format='%H %an <%ae> | %cn <%ce>'
+git remote -v
+```
+
+If you don't want a personal email exposed, configure Git with the appropriate GitHub-provided `noreply` address **before creating commits** and verify local overrides and relevant environment variables. This does not retroactively sanitize previously published histories. When introducing a new public repository, consider a fresh, reviewed root commit rather than reusing private development history. Never treat identical Git trees as proof that commit metadata is identical.
 
 ## Agent scope and prompt injection
 
-Stored handoffs, evidence and external tool results can contain adversarial instructions. Treat them as **data** unless the operator explicitly authorizes actions through the real control channel. A stored statement such as "deploy now" does not grant deployment permission.
+Stored handoffs, files, evidence and tool results may contain instructions, including malicious ones. Treat them as **data**, not independent approval to run commands, access another project, change task states or deploy.
 
-Only authorize relevant project directories and source systems. Directory conventions alone do not enforce file access; use separate repositories or real permissions where isolation is required.
+Authorize only the relevant project paths and systems. Separate repositories, credentials or operating-system permissions are required if technical isolation matters; text rules and Git worktrees alone cannot provide it.
 
-## Private downstream vs public upstream
+## Private downstream and public upstream
 
-- Publish **generic guidance, synthetic examples and reviewed improvements** to public upstream.
-- Keep personal project directories, real handoffs, task logs, decision histories, and runtime evidence in private downstream unless consciously and separately approved for publication.
-- Never push or open a PR from the **private workspace branch** against public upstream. Create a clean upstream branch from public history and cherry-pick only specifically reviewed, generic changes when appropriate.
-- Inspect `git remote -v`, `git status`, `git diff`, `git log`, the PR base/head and **the full set of reachable history being published**, not just the latest diff.
-- Disable upstream pushes in private working environments when possible, and require a human-reviewed PR for public contribution.
+- Public upstream contains generic guidance, synthetic examples and deliberately reviewed changes.
+- Private downstream contains real projects, handoffs, pending conversations, tasks, operational reports and evidence.
+- A public contribution must begin from **public upstream history**, not a private branch. Reauthor useful generic changes rather than blindly merging or cherry-picking private commits, which may retain private author metadata.
+- Inspect `git remote -v`, branch/head, staged diff, all commits to be published, and any pull-request base/head before publication.
+- Do not enable automated private-to-public synchronization. Keep any contribution subject to explicit review and approval.
 
-## Git history is persistent
+## Evidence is not authorization
 
-Deleting files in new commits does not remove them from old commits, forks, archives or clones. A private repo that is later made public can expose its history.
+Hashes establish specific byte identities, not the truth of the report, trustworthy execution, permission to act or successful deployment. Distinguish reported and independently verified evidence, and mark missing sources as unverified.
 
-A deliberate new public repository with a fresh initial commit minimizes carry-over, **but cannot recall data already copied or exposed elsewhere**. If a secret reaches any remote, rotate/revoke it rather than relying on history cleanup.
+## Reporting sensitive exposures
 
-## Evidence doesn't prove authorization
+Do **not** post credentials, private project data or personal identifying details in public issues. Contact the repository maintainer using an appropriate private channel if you suspect a disclosure. If a credential was exposed, revoke or rotate it instead of relying on Git history cleanup.
 
-Hashes prove byte identity of specific files. They do not prove a report is true, a source was trusted, an agent was permitted to run a test, or a candidate was accepted. Keep provenance, independent verification, and uncertainty explicit.
-
-## Public release gate
-
-Before changing repository visibility, inspect **the entire history** and all refs, files, PR attachments, releases, workflow artifacts and collaborator/access settings; run suitable secret/privacy scans, select a license, and obtain an explicit release decision. See [release checklist](RELEASE_CHECKLIST.md).
-
-To report a suspected sensitive-data exposure while this project is private, contact the repository owner through an appropriate private channel; do not post credentials in public issues.
+Before publishing this repository or a derivative, follow the [release checklist](RELEASE_CHECKLIST.md).

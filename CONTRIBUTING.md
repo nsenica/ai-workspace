@@ -1,22 +1,28 @@
-# Contributing (private foundation stage)
+# Contributing to AI Workspace
 
-AI Workspace is intended to become a public, tool-agnostic guidance project. Until its license and release process are approved, development remains on reviewed branches.
+AI Workspace is a small, tool-agnostic documentation project. Contributions should make the method clearer, safer, easier to adopt or easier to verify, without introducing required infrastructure.
 
-## A good contribution
+## Good contributions
 
-Improve the clarity, safety, onboarding or practical usefulness of the persistent-workspace method. Prefer precise, small changes with a fictional example or realistic acceptance check over new dependencies and generic policy text.
+- Improve a confusing instruction, handoff template, information-ownership rule or context-lifecycle example.
+- Fix a broken link, contradiction, security boundary or misleading evidence claim.
+- Add a **fictional**, bounded acceptance scenario that demonstrates why the change helps.
 
-Do not contribute a real user's project handoff, decisions, credentials, logs, archived conversations or source-code history as an illustration. **Use synthetic data.**
+Avoid adding mandatory services, frameworks or project-management abstractions without a clearly demonstrated need.
 
-## Proposed review flow
+## Before proposing changes
 
-1. Start from the foundation's current default branch, **not from a private downstream branch**.
-2. Explain what adoption problem the change fixes and who benefits.
-3. Keep changes focused; identify compatibility consequences for existing downstream workspaces.
-4. Verify relative links, template placeholders, and safety/authority language.
-5. Review the full PR diff and history for sensitive or project-specific information.
-6. Obtain human review before merging.
+1. Start from the **public upstream** default branch. Never use your private workspace as the source branch for a public pull request.
+2. Explain the problem, proposed change, and compatibility implications for existing private workspaces.
+3. Use synthetic data only. Do not include real project handoffs, archived conversations, private URLs, credentials, internal file paths or logs.
+4. Check relative Markdown links, template placeholders, Git metadata and the complete commits you intend to publish.
+5. Preserve authority boundaries: stored context is not permission to create tasks, change decisions, run agents or deploy.
+6. Open a focused pull request for human review; do not claim checks or independent review you did not perform.
 
-A downstream improvement can be proposed in words or as a **clean, reauthored** upstream patch; never merge private history upward.
+**Private-to-public safety:** Do not merge a private project branch into this repository, and do not assume cherry-picking a private commit is safe: it may carry its original author metadata as well as private content. Reauthor any transferable generic improvement as a new reviewed patch on clean public history, with your intended public Git identity.
 
-This policy may change before public release. See [release checklist](docs/RELEASE_CHECKLIST.md).
+See [Security](docs/SECURITY.md), [Upstream synchronization](docs/UPSTREAM_SYNC.md) and the [release checklist](docs/RELEASE_CHECKLIST.md).
+
+## Expectations
+
+This repository has no guaranteed response or maintenance schedule. Proposals are evaluated for clarity, usefulness, scope and privacy. Keep changes small and acknowledge limitations. Documentation and templates are provided under the [MIT License](LICENSE); by submitting a contribution, you agree to contribute it on those terms.

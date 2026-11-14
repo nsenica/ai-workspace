@@ -1,18 +1,33 @@
-# Public-release checklist (not yet approved)
+# Public-release checklist
 
-This repository began as a **private development workspace**. The owner plans to recreate it with clean history for public release. The checklist is an explicit gate, **not authorization to publish**.
+Use this checklist for the initial public release **and** for future publication of changes that could expose private material. It is an operational checklist, not permission to change repository visibility or publish.
 
-- [ ] Confirm final scope, product name and a concise, truthful README.
-- [ ] Select an explicit open-source license and add the correct `LICENSE` file.
-- [ ] Confirm contributor guidance and the desired governance/maintenance expectations.
-- [ ] Review all current text, examples, generated files and metadata for private project references and sensitive data.
-- [ ] Audit all Git commits, branches, tags, PRs, attached artifacts and cached/generated outputs; do not assume deleting a file later removes history.
-- [ ] Recreate a fresh public repository from **only reviewed files**; do not push development history, forks or private merge commits.
-- [ ] Confirm visibility, access permissions, default branch protection and GitHub template setting if desired.
-- [ ] Run link/file checks and test a fresh clone and one-project setup from its README.
-- [ ] Have a fresh agent read the fictional handoff and accurately identify the next gate, uncertainty and authority boundaries.
-- [ ] Validate that a private downstream can adopt upstream changes without exposing private files or history.
-- [ ] Confirm no automatic private-to-public push/sync is enabled.
-- [ ] Obtain an explicit human go/no-go before making the repository public.
+## Identity, license and scope
 
-**No license selected yet:** repository availability does not by itself grant reuse rights. The release must resolve this.
+- [ ] Confirm the product name, intended audience and truthful README status.
+- [ ] Include an approved explicit license (`LICENSE`) and align contribution language.
+- [ ] Inspect Git author **and committer** names/emails across all commits and refs proposed for publication. Use a public-safe identity if desired.
+- [ ] Confirm the repository contains only generic guidance and synthetic examples; no real project handoffs or private workspace index.
+
+## Privacy and history
+
+- [ ] Audit **all reachable commits**, branches, tags, PR histories, releases and workflow artifacts that will become public—not only the current file tree.
+- [ ] Review contents, filenames, URLs, fixtures, generated artifacts and metadata for credentials, personal email addresses, internal infrastructure and confidential context.
+- [ ] Run an appropriate secret scanner where practical, and perform a manual review; no scanner proves the absence of sensitive data.
+- [ ] Confirm no private project branch/history is merged into the public repository and no automatic private-to-public push is configured.
+
+## Usability and compatibility
+
+- [ ] Validate relative Markdown links and illustrative JSON/templates.
+- [ ] Test a fresh clone or template-derived **private** workspace with at least one fictional project, including optional `INFORMATION.md` and `PENDING.md`.
+- [ ] Ask a fresh read-only reviewer/agent to identify the next gate, reported vs verified claims and authorization boundaries without seeing the previous discussion.
+- [ ] Test upstream → private downstream adoption on a disposable checkout, accounting for related and unrelated Git histories. Never push downstream commits upstream.
+- [ ] Review contribution expectations, security guidance and GitHub repository settings, including the template option if desired.
+
+## Publication gate
+
+- [ ] Independently review the exact intended public commit/tree and verify it against the release candidate.
+- [ ] Obtain **explicit owner go/no-go** for making the repository public.
+- [ ] After publication, check actual visibility, repository files, history, license display, template behavior and external onboarding instructions.
+
+If any check fails or cannot be established, preserve the limitation and do not claim that check passed. Keep the repository private until the owner authorizes publication.

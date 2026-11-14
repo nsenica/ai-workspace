@@ -1,71 +1,78 @@
 # AI Workspace
 
-**Persistent project context for humans and AI agents, backed by Git.**
+**Keep AI-assisted project work understandable across conversations, agents and machines.**
 
-AI conversations end. Project knowledge, decisions, and evidence should survive them.
+A conversation ends, an agent loses context, or a different model takes over. AI Workspace gives the next contributor a small, Git-backed handoff: where the project stands, which systems are authoritative, what's unresolved, and what needs approval before anything changes.
 
-AI Workspace is a small, tool-agnostic repository structure and operating method. It helps a new conversation, agent, model, or machine resume project work from preserved context **without treating a handoff as unquestionable truth**.
+It's a **method and collection of Markdown templates**, not an app to install. No server, database, framework, task tracker or particular AI model is required.
 
-There is no server, database, orchestration engine, or mandatory model. Start with Markdown and Git.
+## Try it in five minutes
 
-## Quick start
+1. On GitHub, select **Use this template → Create a new repository**, and make your own workspace **private**. You can also copy the files into a private Git repository you control.
+2. Create `projects/<slug>/` and copy [the handoff template](templates/project/HANDOFF.md) to `projects/<slug>/HANDOFF.md`. Fill in the current gate, authoritative sources, last-checked status and the next safe action.
+3. Copy [the workspace index example](WORKSPACE.example.md) to `WORKSPACE.md`, replace the fictional project row and keep it private. The foundation ignores this local file by default; you can deliberately track it in your **private** repository.
+4. Give a new agent **read-only access to the assigned project only** and ask:
 
-1. Create a **private** repository from this template (or clone it and push to your own private remote). Do not use your work-in-progress repository as a public contribution branch.
-2. Create `projects/<slug>/` from [templates/project/](templates/project/). Fill in `HANDOFF.md`; if the project has existing idea/decision/task systems, map them with the optional `INFORMATION.md` template.
-3. Add the project to your private `WORKSPACE.md` using [WORKSPACE.example.md](WORKSPACE.example.md) as a starting point.
-4. Give your agent access to the workspace **within an explicit approved scope** and ask it to read [AGENTS.md](AGENTS.md), `WORKSPACE.md`, and the relevant project handoff before working.
-5. When a meaningful discussion pauses **before being recorded elsewhere**, preserve it as pending context if authorized. After milestones, refresh the handoff and evidence as needed; commit and verify publication.
+   > Read `AGENTS.md`, `STORAGE.md`, `WORKSPACE.md` and `projects/<slug>/HANDOFF.md`. Identify the current gate, authoritative sources, verified versus reported claims, unresolved questions and the next action requiring approval. Do not modify files, start work or inspect other projects.
 
-Full first-run instructions: [Getting started](docs/GETTING_STARTED.md).
+5. Compare its answer with the real source or task system. When a useful discussion is paused before formal recording, keep a concise, provisional note in `PENDING.md` and link it from the handoff only if relevant.
 
-## The model
+For exact setup steps and an exercise, see [Getting started](docs/GETTING_STARTED.md) and the [fictional handoff example](examples/sample-project/README.md).
 
-| Place | What it owns |
+## A typical private workspace
+
+```text
+WORKSPACE.md                  # Private project index and local rules
+projects/
+  my-project/
+    HANDOFF.md                 # Current state and next safe gate
+    INFORMATION.md             # Optional: who owns decisions, tasks, evidence
+    PENDING.md                 # Optional: valuable unresolved discussions
+```
+
+The public repository contains only generic guidance, [templates](templates/project/) and fictional [examples](examples/sample-project/README.md). **Real project directories and private handoffs belong in your private workspace, not in contributions to this upstream repository.**
+
+## Where information belongs
+
+| Information | Authority |
 | --- | --- |
-| Source repository | Code and source revision |
-| Task/issue tracker (if used) | Tasks, acceptance, priorities and statuses assigned to it |
-| Project's designated information stores | Canonical ideas, decisions, research and other records, category by category |
-| Runtime/service | Actual operational state |
-| **AI Workspace** | Handoffs and unmaterialized context; also canonical information **only for categories explicitly assigned to it** |
-| Human or delegated authority | Permissions, approvals and exceptions |
+| Code and exact revisions | Source repository |
+| Tasks, acceptance and statuses | Your designated task/issue system, if any |
+| Approved decisions and other durable knowledge | The canonical store assigned to each category; sometimes AI Workspace itself |
+| Actual operational state | Running service, database or other operational source |
+| Current coordination | `HANDOFF.md`, with links rather than duplicate records |
+| Valuable not-yet-recorded discussions | `PENDING.md` until verified materialization or explicit discard |
+| Approvals, exceptions and permitted actions | Human operator or explicitly authorized controlling system |
 
-Projects choose where each kind of information belongs. AI Workspace can itself hold canonical ideas or decisions **when so designated**, but must not duplicate a project's existing backlog. Recording context never authorizes changing tasks, approvals or deployments. A saved claim about a test or deployment is not proof it succeeded. [Context lifecycle](docs/CONTEXT_LIFECYCLE.md).
+The [information-ownership template](templates/project/INFORMATION.md) helps route categories without creating a second backlog. If a project has no external decision store, it **may** designate its own `IDEAS.md` and `DECISIONS.md` as canonical. A note in a handoff never grants permission to change an authoritative system.
 
-## Working rhythm
+## The working rhythm
 
 **Resume → Verify → Work within scope → Preserve → Publish and verify → Hand off.**
 
-An active handoff answers: *Where are we? What's known? What remains uncertain? Who acts next? What must not happen without approval?* Unfinished discussions can remain in `PENDING.md` until materialized or deliberately discarded; the handoff links only to what matters next. [Method](docs/METHOD.md).
+An agent should be able to answer: *What is known? What was merely reported? What has not been checked? What happens next? Who is allowed to do it?*
 
-## What's in this repository?
+- Keep the active handoff concise and current. Git history holds previous versions.
+- Preserve meaningful unfinished discussions without treating them as approved tasks.
+- Verify a new canonical record by reading it back **before** retiring the temporary pending note.
+- Attribute tests, reviews and deployments to their evidence. A confident summary is not proof of delivery.
+- Limit reads and writes to the explicitly assigned project. Git folders are conventions, **not access-control boundaries**.
 
-- [AGENTS.md](AGENTS.md) — reusable instructions for contributing agents.
-- [STORAGE.md](STORAGE.md) — practical retention, provenance, and evidence conventions.
-- [Templates](templates/project/) — handoff, optional information ownership and pending discussion records, and local durable idea/decision registers.
-- [Example](examples/sample-project/README.md) — a fictional two-agent continuation, including an explicitly illustrative evidence record.
-- [Context lifecycle](docs/CONTEXT_LIFECYCLE.md) — capture unfinished discussions, route to a canonical store, verify, and retire redundant pending context.
-- [Security](docs/SECURITY.md) — privacy, trust boundaries, credentials, and safe publication.
-- [Upstream synchronization](docs/UPSTREAM_SYNC.md) — how to adopt public improvements in an existing private workspace.
-- [WORKSPACE.example.md](WORKSPACE.example.md) — a personal project index and local settings example (copy to `WORKSPACE.md`).
+See [Method](docs/METHOD.md), [Context lifecycle](docs/CONTEXT_LIFECYCLE.md) and [Security](docs/SECURITY.md).
 
-Project-specific folders under `projects/` are your workspace, **not content to contribute upstream**. Private `WORKSPACE.md` is intentionally ignored by Git in this public foundation's default `.gitignore` so an initial clone does not accidentally stage it; a private downstream repository can explicitly `git add -f WORKSPACE.md` once reviewed.
+## What is included?
 
-## Principles
+- [`AGENTS.md`](AGENTS.md) — instructions for agents using a workspace within approved scope.
+- [`STORAGE.md`](STORAGE.md) — evidence, provenance, retention and handoff conventions.
+- [Project templates](templates/project/) — handoffs, optional routing, pending discussions and local idea/decision registers.
+- [External-tracker example](examples/sample-project/README.md) — fictional two-agent review handoff.
+- [Local-canonical example](examples/local-only/README.md) — fictional project whose ideas/decisions live in its workspace.
+- [Getting started](docs/GETTING_STARTED.md), [Security](docs/SECURITY.md) and [Upstream synchronization](docs/UPSTREAM_SYNC.md).
 
-1. **Continuity over chat history.** Store the current gate and durable pointers, not entire conversations by default.
-2. **Authority stays at the source.** Context is never a backdoor permission to change code, tasks, or deployments.
-3. **Provenance over confidence.** Separate agent reports, independent verification, and unknowns.
-4. **Capture unresolved value, within permission.** Remember conversations worth resuming, then retire temporary notes once their canonical record is verified.
-5. **Small active state, rich supporting evidence.** Keep handoffs navigable while preserving material that helps reproduce or audit results.
-6. **Public foundation, private by default in practice.** Share generic improvements; never automatically publish downstream project data.
-7. **No mandatory stack.** Plain files and Git first; optional tooling only when it solves a demonstrated problem.
+## Scope, maturity and contributions
 
-## Who is this for?
+**v0.1 foundation:** documentation-first and intentionally small. It has no automatic synchronization, agent orchestration, access isolation, approval enforcement or claim to verify external systems. Adopt the parts that serve your project, and confirm permissions in your actual tools.
 
-People collaborating with AI on long-running software or research projects, especially across multiple conversations, agents, or machines. The method works with manual prompting and can be adopted by automated systems later; it does **not** provide autonomy, isolation, or security controls by itself.
+Use the [contribution guide](CONTRIBUTING.md) to propose generic improvements. Never include real handoffs, private repository history, credentials or confidential examples in a public contribution. Read the [release checklist](docs/RELEASE_CHECKLIST.md) before publishing a derivative workspace.
 
-## Status
-
-**Foundation v0 — private design/review stage.** Templates and the example are intentionally small. Public-release decisions (including the final license, contribution policy, and security review) are not complete. See [Release checklist](docs/RELEASE_CHECKLIST.md). No license grant is implied until a license is selected.
-
-The fictional example contains no real project data. Always review the full tree and Git history before making any derivative repository public.
+Licensed under the [MIT License](LICENSE).

@@ -1,57 +1,57 @@
 # Getting started
 
-This quick start assumes you know basic Git commands. AI Workspace is a **method and file structure**, not software you install.
+AI Workspace is a method and Markdown file structure, not software to install. Basic Git familiarity is helpful, but no AI vendor, framework or task tracker is required.
 
-## 1. Create your own private workspace
+## 1. Create a private workspace
 
-From the GitHub template UI, choose **Use this template → Create a new repository** if the repository is configured as a template. Otherwise clone the repository and push it to a new, **private** remote you control.
+From the GitHub repository, select **Use this template → Create a new repository** if the template option is enabled. Choose **Private**. Alternatively, copy the reviewed files into a new private Git repository you control.
 
-Do not begin by making your project-context repository public. Review remote URL, visibility and collaborators before uploading anything.
+Before uploading your own data, check the destination remote, repository visibility, account permissions and commit author email. See [Security](SECURITY.md).
 
 ## 2. Add one project
 
-Create a folder `projects/<slug>/` (lowercase, simple name). Copy `templates/project/HANDOFF.md` to the new folder and fill it in.
+In your new private workspace, choose a simple lowercase slug (for example `notes-demo`), then create its handoff:
 
-Choose **where each category of durable information belongs**. If the project already uses Backlog.md, GitHub Issues, ADRs or another system, copy `templates/project/INFORMATION.md` into your project and fill in the routing rather than duplicating records. If no other store exists, you can use local `templates/project/IDEAS.md` and `DECISIONS.md` as canonical registers. `INDEX.md` remains optional. Copy templates into the project folder and delete placeholder rows before use.
+```sh
+mkdir -p projects/notes-demo
+cp templates/project/HANDOFF.md projects/notes-demo/HANDOFF.md
+cp templates/project/INFORMATION.md projects/notes-demo/INFORMATION.md
+cp WORKSPACE.example.md WORKSPACE.md
+```
 
-Copy `WORKSPACE.example.md` to `WORKSPACE.md` and register your project. The upstream template ignores this local file to reduce accidental publication. To commit it to **your private repository only**, first inspect its content and remotes, then use `git add -f WORKSPACE.md`.
+Edit `projects/notes-demo/HANDOFF.md` so it explains the project's **real or deliberately fictional** current state, what has been checked, and the next safe action. If the project uses an external task tracker, make `INFORMATION.md` point to it rather than duplicating task records. If no external store exists, you may designate project-local `IDEAS.md` and `DECISIONS.md` as canonical for particular categories. Don't treat those files as automatic authority to implement or approve anything.
 
-No commands here create or grant agent access. Configure your own tools separately.
+Replace the example row in `WORKSPACE.md` with your project. The foundation's `.gitignore` excludes the root `WORKSPACE.md` by default to avoid accidental contribution upstream. You can deliberately track it in **your private repository** with `git add -f WORKSPACE.md` after reviewing the file and remote.
 
-## 3. Give the agent an explicit starting instruction
+## 3. Try a read-only fresh-agent handoff
 
-Use a prompt like:
+Give a new chat or agent access only to the assigned project and relevant generic guidance, then use this instruction:
 
-> You are working on project `<slug>`. Your current assignment is to **read and summarize the next safe action only; do not write or execute changes**. Read `AGENTS.md`, `STORAGE.md`, `WORKSPACE.md` (if present), and `projects/<slug>/HANDOFF.md`. Identify the authoritative source systems, what is verified versus reported, blockers, and the next approval gate. If you cannot access a source, mark it unverified. Do not browse other project directories.
+> You are working on project `notes-demo`. Your assignment is **read-only analysis**; do not write, execute, create tasks or change settings. Read `AGENTS.md`, `STORAGE.md`, `WORKSPACE.md` (if present), and `projects/notes-demo/HANDOFF.md` and `INFORMATION.md`. State the authoritative stores, current gate, reported versus independently verified claims, open questions and next step that would require approval. If an external system cannot be inspected, say so. Do not inspect other projects.
 
-For an actual implementation task, separately state the exact read/write scope, source repositories, constraints and required approval/review gates. Do not assume a generic instruction grants access.
+Check that the answer doesn't claim nonexistent tests, source access or approvals. For a completely fictional controlled example, see [sample project](../examples/sample-project/README.md).
 
-## 4. Capture a paused discussion (optional)
+## 4. Preserve a discussion before it becomes canonical (optional)
 
-Suppose you discuss a future feature but decide to finish the current milestone **before recording it as a formal idea**. If permitted to write project context, create a short entry from `templates/project/PENDING.md` describing the motivation, useful findings, open questions, revisit trigger, and intended destination. This is **not** a Backlog task or approved decision.
+If you explore an idea and defer registering it, create `projects/notes-demo/PENDING.md` from the [pending template](../templates/project/PENDING.md) when you have permission to write coordination context. Summarize motivation, findings, open questions, what is not approved, revisit trigger and intended canonical destination. Do not copy a full transcript or treat a discussion as an accepted task.
 
-When the discussion is later materialized, verify the external/local canonical record by **reading it back** before retiring the pending entry. If the write is blocked, partial or unverified, preserve the unresolved portion. If the discussion is explicitly discarded, retire it without inventing a task. See [context lifecycle](CONTEXT_LIFECYCLE.md).
+Later, if an authorized actor writes the idea or decision to its designated store, **read it back** and verify the identity/content before retiring the redundant pending note. If the write fails or cannot be checked, preserve the unresolved portion. See [Context lifecycle](CONTEXT_LIFECYCLE.md).
 
-## 5. Run one handoff cycle
+## 5. Complete a handoff cycle
 
-1. Start a small task with a known authoritative issue/source revision (or clearly identified locally managed scope).
-2. Have the contributor verify current state and work within authorization.
-3. Save the minimal new context: current handoff, *a pointer to* canonical decisions or evidence if elsewhere, and permitted local records if designated. Do not mirror an external backlog.
-4. Have the contributor review the diff for secrets, scope and truthfulness; commit to the **private** remote.
-5. Open a fresh agent session, give only the project name and read-only resume prompt, then ask it to identify the next gate.
-6. Compare that answer against the authoritative systems and amend unclear instructions.
+1. Start with a known source/task revision or an explicitly local scope, and verify mutable facts through permitted channels.
+2. Work only within the current assignment; requesting a handoff is not permission to deploy or mutate a tracker.
+3. Preserve the next gate and relevant references in `HANDOFF.md`; avoid an ever-growing chronological log.
+4. Check the diff for confidentiality, attribution and permissions, commit to the intended **private** remote, and verify the published commit.
+5. Open a fresh read-only session; ask it to identify the next safe action and compare with the real authoritative system.
 
-For a completely fictional illustration, see [the example](../examples/sample-project/README.md).
+## Beginner pitfalls
 
-## 6. Avoid these beginner traps
+- Uploading private project context or history to public upstream.
+- Treating a handoff claim as independent verification of a test, review or deployment.
+- Creating duplicate task/decision registers when another system owns them.
+- Erasing pending discussions after an unverified write, or retrying a create without checking whether a record exists.
+- Using directory conventions as security isolation or inferring permission to act from stored text.
+- Assuming `.gitignore`, GitHub email privacy settings or a new file deletion removes old Git history.
 
-- Writing full conversation histories into every handoff.
-- Calling an agent-reported test result independently verified.
-- Confusing a Markdown task-status summary with the designated task authority.
-- Saving every brainstorm as a backlog task, or retaining pending discussions after verified materialization.
-- Deleting pending context after an unverified external write, or retrying a timed-out create without checking for an existing record.
-- Granting implicit permission to deploy simply because the handoff says "next."
-- Giving agents general visibility to unrelated private projects.
-- Assuming `.gitignore` or a private GitHub setting removes data from existing Git history.
-
-After your first successful cycle, see [Method](METHOD.md) and [Security](SECURITY.md).
+See [Method](METHOD.md), [Security](SECURITY.md) and [Upstream synchronization](UPSTREAM_SYNC.md).
