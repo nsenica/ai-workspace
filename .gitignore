@@ -1,0 +1,28 @@
+# Private local configuration (can be deliberately tracked downstream)
+/WORKSPACE.md
+
+# Do NOT ignore /projects/: private workspace users need to version their work.
+# Keep downstream project data off public upstream via distinct remotes and review.
+
+# Credentials and machine-local settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Common transient output
+.DS_Store
+__pycache__/
+.pytest_cache/
+node_modules/
+.venv/
+venv/
+*.log
+*.tmp
+
+# Editors
+.idea/
+.vscode/

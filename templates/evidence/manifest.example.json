@@ -1,0 +1,29 @@
+{
+  "schema": "ai-workspace/evidence-example/v0",
+  "note": "Illustrative only. No schema validator is provided.",
+  "project": "example",
+  "subject": "TASK-001 candidate-versus-baseline",
+  "captured_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "source": {
+    "repository": "owner/repository",
+    "baseline_revision": "full-commit-sha",
+    "candidate_revision_or_fingerprint": "full-commit-sha-or-worktree-fingerprint"
+  },
+  "producer": "agent-or-process",
+  "verification": {
+    "status": "reported",
+    "verifier": null
+  },
+  "outcome": "Describe passes, failures, skips and unknowns",
+  "limitations": [
+    "State omitted commands, redactions and unavailable originals"
+  ],
+  "files": [
+    {
+      "path": "example-report.txt",
+      "sha256": "sha256-of-actual-stored-file-bytes",
+      "bytes": 0,
+      "transformation": "none-or-described-redaction"
+    }
+  ]
+}
